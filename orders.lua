@@ -6,7 +6,7 @@ _addon.command  = 'ord'
 require('tables')
 require('strings')
 
-local accounts  = {'Eliidyr','Lordpotato','Duhpeter','Stunzeed','Mutant','Ninjar','Turtle'}
+local accounts  = {'Eliidyr','Lordpotato','Duhpeter','Clapmycheeks','Mutant','Ninjar','Turtle','Peenaspump'}
 local gdelay    = 0.75
 
 windower.register_event('addon command', function(...)
@@ -44,6 +44,29 @@ windower.register_event('addon command', function(...)
             windower.send_ipc_message(windower.convert_auto_trans(table.concat(order, ' ')))
             windower.send_command(windower.convert_auto_trans(self))
 
+        elseif c == '@*' then
+            local player    = windower.ffxi.get_player() or false
+            local command   = table.concat(a, ' '):sub(3, #table.concat(a, ' '))
+            local order     = {}
+
+            for i,v in ipairs(accounts) do
+                local name = v
+
+                if name and name ~= '' and name ~= player.name then
+
+                    if i == 1 then
+                        table.insert(order, string.format('||%s %s', name, command))
+
+                    elseif i > 1 then
+                        table.insert(order, string.format('||%s %s', name, command))
+
+                    end
+
+                end
+
+            end
+            windower.send_ipc_message(windower.convert_auto_trans(table.concat(order, ' ')))
+
         elseif c == '@@' then
             local player    = windower.ffxi.get_player() or false
             local command   = table.concat(a, ' '):sub(4, #table.concat(a, ' '))
@@ -76,6 +99,32 @@ windower.register_event('addon command', function(...)
             windower.send_ipc_message(windower.convert_auto_trans(table.concat(order, ' ')))
             windower.send_command(windower.convert_auto_trans(self))
 
+        elseif c == '@@*' then
+            local player    = windower.ffxi.get_player() or false
+            local command   = table.concat(a, ' '):sub(4, #table.concat(a, ' '))
+            local order     = {}
+            local delay     = 0
+
+            for i,v in ipairs(accounts) do
+                local name = v
+
+                if name and name ~= '' and name ~= player.name then
+
+                    if i == 1 then
+                        table.insert(order, string.format('||%s wait %s; %s', name, delay, command))
+                        delay = (delay + gdelay)
+
+                    elseif i > 1 then
+                        table.insert(order, string.format('||%s wait %s; %s', name, delay, command))
+                        delay = (delay + gdelay)
+
+                    end
+
+                end
+
+            end
+            windower.send_ipc_message(windower.convert_auto_trans(table.concat(order, ' ')))
+
         elseif c == 'r' then
             local player    = windower.ffxi.get_player() or false
             local command   = table.concat(a, ' '):sub(3, #table.concat(a, ' '))
@@ -104,6 +153,30 @@ windower.register_event('addon command', function(...)
             end
             windower.send_ipc_message(windower.convert_auto_trans(table.concat(order, ' ')))
             windower.send_command(windower.convert_auto_trans(self))
+
+        elseif c == 'r*' then
+            local player    = windower.ffxi.get_player() or false
+            local command   = table.concat(a, ' '):sub(3, #table.concat(a, ' '))
+            local order     = {}
+
+            for i,v in ipairs(accounts) do
+                local name      = v
+                local target    = windower.ffxi.get_mob_by_name(name) or false
+
+                if name and name ~= '' and name ~= player.name and target and (target.distance):sqrt() < 25 then
+
+                    if i == 1 then
+                        table.insert(order, string.format('||%s %s', name, command))
+
+                    elseif i > 1 then
+                        table.insert(order, string.format('||%s %s', name, command))
+
+                    end
+
+                end
+
+            end
+            windower.send_ipc_message(windower.convert_auto_trans(table.concat(order, ' ')))
 
         elseif c == 'rr' then
             local player    = windower.ffxi.get_player() or false
@@ -138,6 +211,33 @@ windower.register_event('addon command', function(...)
             windower.send_ipc_message(windower.convert_auto_trans(table.concat(order, ' ')))
             windower.send_command(windower.convert_auto_trans(self))
 
+        elseif c == 'rr*' then
+            local player    = windower.ffxi.get_player() or false
+            local command   = table.concat(a, ' '):sub(4, #table.concat(a, ' '))
+            local order     = {}
+            local delay     = 0
+
+            for i,v in ipairs(accounts) do
+                local name = v
+                local target    = windower.ffxi.get_mob_by_name(name) or false
+
+                if name and name ~= '' and name ~= player.name and target and (target.distance):sqrt() < 25 then
+
+                    if i == 1 then
+                        table.insert(order, string.format('||%s wait %s; %s', name, delay, command))
+                        delay = (delay + gdelay)
+
+                    elseif i > 1 then
+                        table.insert(order, string.format('||%s wait %s; %s', name, delay, command))
+                        delay = (delay + gdelay)
+
+                    end
+
+                end
+
+            end
+            windower.send_ipc_message(windower.convert_auto_trans(table.concat(order, ' ')))
+
         elseif c == 'o' then
             local player    = windower.ffxi.get_player() or false
             local command   = table.concat(a, ' '):sub(3, #table.concat(a, ' '))
@@ -148,7 +248,7 @@ windower.register_event('addon command', function(...)
                 local name      = v
 
                 if name and name ~= '' and name ~= player.name then
-
+                    
                     if i == 1 then
                         table.insert(order, string.format('||%s %s', name, command))
 
@@ -234,6 +334,38 @@ windower.register_event('addon command', function(...)
             windower.send_ipc_message(windower.convert_auto_trans(table.concat(order, ' ')))
             windower.send_command(windower.convert_auto_trans(self))
 
+        elseif c == 'p*' then
+            local player    = windower.ffxi.get_player() or false
+            local command   = table.concat(a, ' '):sub(3, #table.concat(a, ' '))
+            local party     = windower.ffxi.get_party()
+            local order     = {}
+
+            for i,v in ipairs(accounts) do
+                local name = v
+
+                if name ~= '' and name ~= player.name then
+                    
+                    for ii,vv in pairs(party) do
+                        
+                        if (ii:sub(1,1) == "p" or ii:sub(1,1) == "a") and tonumber(ii:sub(2)) ~= nil and name == vv.name then
+                            
+                            if i == 1 then
+                                table.insert(order, string.format('||%s %s', name, command))
+
+                            elseif i > 1 then
+                                table.insert(order, string.format('||%s %s', name, command))
+
+                            end
+
+                        end
+
+                    end
+
+                end
+
+            end
+            windower.send_ipc_message(windower.convert_auto_trans(table.concat(order, ' ')))
+
         elseif c == 'pp' then
             local player    = windower.ffxi.get_player() or false
             local command   = table.concat(a, ' '):sub(4, #table.concat(a, ' '))
@@ -282,6 +414,208 @@ windower.register_event('addon command', function(...)
             end
             windower.send_ipc_message(windower.convert_auto_trans(table.concat(order, ' ')))
             windower.send_command(windower.convert_auto_trans(self))
+
+        elseif c == 'pp*' then
+            local player    = windower.ffxi.get_player() or false
+            local command   = table.concat(a, ' '):sub(4, #table.concat(a, ' '))
+            local party     = windower.ffxi.get_party()
+            local order     = {}
+            local delay     = 0
+
+            for i,v in ipairs(accounts) do
+                local name = v
+                
+                if name and name ~= '' and name ~= player.name then
+                    
+                    for ii,vv in pairs(party) do
+
+                        if (ii:sub(1,1) == "p" or ii:sub(1,1) == "a") and tonumber(ii:sub(2)) ~= nil and vv.name and name == vv.name then
+                            
+                            if i == 1 then
+                                table.insert(order, string.format('||%s wait %s; %s', name, delay, command))
+                                delay = (delay + gdelay)
+
+                            elseif i > 1 then
+                                table.insert(order, string.format('||%s wait %s; %s', name, delay, command))
+                                delay = (delay + gdelay)
+
+                            end
+
+                        end
+
+                    end
+
+                end
+
+            end
+            windower.send_ipc_message(windower.convert_auto_trans(table.concat(order, ' ')))
+
+        elseif c == 'z' then
+            local player    = windower.ffxi.get_player() or false
+            local command   = table.concat(a, ' '):sub(3, #table.concat(a, ' '))
+            local party     = windower.ffxi.get_party()
+            local zone      = windower.ffxi.get_info().zone
+            local order     = {}
+            local self      = ''
+
+            for i,v in ipairs(accounts) do
+                local name = v
+
+                if name ~= '' and name ~= player.name then
+                    
+                    for ii,vv in pairs(party) do
+                        
+                        if (ii:sub(1,1) == "p" or ii:sub(1,1) == "a") and tonumber(ii:sub(2)) ~= nil and name == vv.name and zone == vv.zone then
+                            
+                            if i == 1 then
+                                table.insert(order, string.format('||%s %s', name, command))
+
+                            elseif i > 1 then
+                                table.insert(order, string.format('||%s %s', name, command))
+
+                            end
+
+                        end
+
+                    end
+
+                elseif name ~= '' and name == player.name then
+
+                    for ii,vv in pairs(party) do
+
+                        if (ii:sub(1,1) == "p" or ii:sub(1,1) == "a") and tonumber(ii:sub(2)) ~= nil and name == vv.name and zone == vv.zone then
+                            self = string.format('%s', command)
+
+                        end
+
+                    end
+
+                end
+
+            end
+            windower.send_ipc_message(windower.convert_auto_trans(table.concat(order, ' ')))
+            windower.send_command(windower.convert_auto_trans(self))
+
+        elseif c == 'z' then
+            local player    = windower.ffxi.get_player() or false
+            local command   = table.concat(a, ' '):sub(3, #table.concat(a, ' '))
+            local party     = windower.ffxi.get_party()
+            local zone      = windower.ffxi.get_info().zone
+            local order     = {}
+            local self      = ''
+
+            for i,v in ipairs(accounts) do
+                local name = v
+
+                if name ~= '' and name ~= player.name then
+                    
+                    for ii,vv in pairs(party) do
+                        
+                        if (ii:sub(1,1) == "p" or ii:sub(1,1) == "a") and tonumber(ii:sub(2)) ~= nil and name == vv.name and zone == vv.zone then
+                            
+                            if i == 1 then
+                                table.insert(order, string.format('||%s %s', name, command))
+
+                            elseif i > 1 then
+                                table.insert(order, string.format('||%s %s', name, command))
+
+                            end
+
+                        end
+
+                    end
+
+                end
+
+            end
+            windower.send_ipc_message(windower.convert_auto_trans(table.concat(order, ' ')))
+
+        elseif c == 'zz' then
+            local player    = windower.ffxi.get_player() or false
+            local command   = table.concat(a, ' '):sub(4, #table.concat(a, ' '))
+            local party     = windower.ffxi.get_party()
+            local zone      = windower.ffxi.get_info().zone
+            local order     = {}
+            local self      = ''
+            local delay     = 0
+
+            for i,v in ipairs(accounts) do
+                local name = v
+                
+                if name and name ~= '' and name ~= player.name then
+                    
+                    for ii,vv in pairs(party) do
+                        
+                        if (ii:sub(1,1) == "p" or ii:sub(1,1) == "a") and tonumber(ii:sub(2)) ~= nil and vv.name and name == vv.name and zone == vv.zone then
+   
+                            if i == 1 then
+                                table.insert(order, string.format('||%s wait %s; %s', name, delay, command))
+                                delay = (delay + gdelay)
+
+                            elseif i > 1 then
+                                table.insert(order, string.format('||%s wait %s; %s', name, delay, command))
+                                delay = (delay + gdelay)
+
+                            end
+
+                        end
+
+                    end
+
+                elseif name and name ~= '' and name == player.name then
+                    
+                    for ii,vv in pairs(party) do
+                        
+                        if (ii:sub(1,1) == "p" or ii:sub(1,1) == "a") and tonumber(ii:sub(2)) ~= nil and vv.name and name == vv.name and zone == vv.zone then
+                            self = string.format('wait %s; %s', delay, command)
+                            delay = (delay + gdelay)
+
+                        end
+
+                    end
+
+                end
+
+            end
+            windower.send_ipc_message(windower.convert_auto_trans(table.concat(order, ' ')))
+            windower.send_command(windower.convert_auto_trans(self))
+
+        elseif c == 'zz*' then
+            local player    = windower.ffxi.get_player() or false
+            local command   = table.concat(a, ' '):sub(4, #table.concat(a, ' '))
+            local party     = windower.ffxi.get_party()
+            local zone      = windower.ffxi.get_info().zone
+            local order     = {}
+            local self      = ''
+            local delay     = 0
+
+            for i,v in ipairs(accounts) do
+                local name = v
+                
+                if name and name ~= '' and name ~= player.name then
+                    
+                    for ii,vv in pairs(party) do
+                        
+                        if (ii:sub(1,1) == "p" or ii:sub(1,1) == "a") and tonumber(ii:sub(2)) ~= nil and vv.name and name == vv.name and zone == vv.zone then
+   
+                            if i == 1 then
+                                table.insert(order, string.format('||%s wait %s; %s', name, delay, command))
+                                delay = (delay + gdelay)
+
+                            elseif i > 1 then
+                                table.insert(order, string.format('||%s wait %s; %s', name, delay, command))
+                                delay = (delay + gdelay)
+
+                            end
+
+                        end
+
+                    end
+
+                end
+
+            end
+            windower.send_ipc_message(windower.convert_auto_trans(table.concat(order, ' ')))
 
         end
 
